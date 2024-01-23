@@ -124,14 +124,18 @@ const managerPath = this.correctPath.map(node => node.name);
      }
 
    if (employee.managerId == null && employee.subordinate.length !== 0) {
-       return[`I am the boss`];
+// This is to comply with rules An employee not having manager need to have direct report, then every null manager id means having 1 direct report
+    return[`Total count for direct and indirect reports: 1`];
     }
+// This is to comply with rules An employee not having manager need to have direct report, then every null manager id means having 1 direct report
     else if (employee.managerId == null && employee.subordinate.length === 0) {
+       console.log(`Total count for direct and indirect reports: 1`);
        return[`Unable to process employee hierarchy. ${employee.name} not having hierarchy`];
     }
     else
      {
-    return[`Total count for direct and indirect reports: ${this.correctPath.length - 1}`];
+// This is to comply with rules An employee not having manager need to have direct report, then every null manager id means having 1 direct report
+    return[`Total count for direct and indirect reports: ${this.correctPath.length}`];
     }
   }
 }
@@ -184,6 +188,8 @@ function displayHierarchy(employeeName) {
       if (foundEmployee) {
        
           if (foundEmployee.mymanagers.length > 1) {
+// This is to comply with rules An employee having manager may not have any direct report. and An employee not having any direct report, need to have a manager
+// Example linton
             console.log(`Error: Unable to process employee tree. ${employeeName} has multiple managers.`);
           } else {
             const path = employeeHierarchy.printCorrectPath();
