@@ -15,8 +15,6 @@ class EmployeeHierarchy {
     this.trees = [];
     this.employees = [];
     this.correctPath = [];
-    this.directManagerCount = 0;
-    this.indirectManagerCount = 0;
   }
 
   addEmployee(employee) {
