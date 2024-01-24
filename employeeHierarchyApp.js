@@ -217,3 +217,5 @@ rl.close();
 };
 
 main();
+
+module.exports = { Employee, EmployeeHierarchy };
