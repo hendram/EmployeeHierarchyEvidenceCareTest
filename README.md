@@ -33,5 +33,25 @@ and search for name in it like evelina
    ![Last Step](laststep.png)
 type exit to quit cli
 
+A step-by-step series of examples that tell you how to test an apps running.
+
+1. **First Step**
+  ![First Step Test](firststeptest.png)
+npx jest --detectOpenHandles
+
+2. **Second Step**
+  ![Second Step Test](pressenterandexit.png)
+press enter, type exit and enter again 
+
+3. **Third Step**
+  ![Third Step Test](thirdstepreport.png)
+open coverage/lcov-report/index.html
+
+4. **Fourth Step**
+   ![Last Step Test](examplereport.png)
+see it on browser
+
+
+
 Thank you
 
