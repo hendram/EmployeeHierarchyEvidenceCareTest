@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1706133942293" clover="3.2.0">
-  <project timestamp="1706133942293" name="All files">
+<coverage generated="1706193341341" clover="3.2.0">
+  <project timestamp="1706193341341" name="All files">
     <metrics statements="94" coveredstatements="61" conditionals="32" coveredconditionals="16" methods="24" coveredmethods="19" elements="150" coveredelements="96" complexity="0" loc="94" ncloc="94" packages="1" files="1" classes="1"/>
     <file name="employeeHierarchyApp.js" path="/home/debuser/EmployeeHierarchy/employeeHierarchyApp.js">
       <metrics statements="94" coveredstatements="61" conditionals="32" coveredconditionals="16" methods="24" coveredmethods="19"/>
