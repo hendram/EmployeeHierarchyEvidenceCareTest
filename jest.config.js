@@ -1,9 +1,7 @@
-// jest.config.js or package.json
-
-  module.exports = {
-    "collectCoverage": true,
-    "collectCoverageFrom": ["employeeHierarchyApp.js"],
-    "coverageReporters": ["json", "lcov", "text", "clover"],
-    // other Jest configurations...
-  }
-
+// jest.config.js
+module.exports = {
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\.js$': 'babel-jest',
+  },
+};
