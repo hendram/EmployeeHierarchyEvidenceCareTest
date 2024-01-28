@@ -1,125 +1,77 @@
-const fs = require('fs');
-const { Employee, EmployeeHierarchy } = require('./employeeHierarchyApp.js');
-
-// Import this at the beginning of your test file
-jest.mock('fs');
-jest.mock('fs').mock('fs/promises', () => ({
-  ...jest.requireActual('fs/promises'), // use actual implementation for other fs.promises methods
-  readFile: jest.fn(),
-}));
-
-
-// Mock the fs.promises.readFile function
-
+const {
+  Employee,
+  fillEmployeeFromFiles,
+  buildEmployeeTree,
+  findEmployee,
+} = require('./employeeHierarchyApp.js'); // Replace 'yourFileName' with the actual file name
 
 describe('Employee', () => {
-  test('Constructor should initialize properties correctly', () => {
-    const employee = new Employee(1, 'John', null);
-    expect(employee.id).toBe(1);
-    expect(employee.name).toBe('John');
-    expect(employee.managerId).toBeNull();
-    expect(employee.subordinate).toEqual([]);
-    expect(employee.mymanagers).toEqual([]);
-  });
-});
-
-describe('EmployeeHierarchy', () => {
-  let employeeHierarchy;
+  let fillEmployee;
+  let buildEmployee;
+  let findEmployeeInstance;
 
   beforeEach(() => {
-    employeeHierarchy = new EmployeeHierarchy();
+    fillEmployee = new fillEmployeeFromFiles();
+    buildEmployee = new buildEmployeeTree();
+    findEmployeeInstance = new findEmployee();
   });
 
-  test('addEmployee should add an employee to the employees array', () => {
-    const employee = new Employee(1, 'John', null);
-    employeeHierarchy.addEmployee(employee);
-    expect(employeeHierarchy.employees).toContain(employee);
+  // Test cases for Employee class
+  describe('Employee class', () => {
+    test('Employee object creation', () => {
+      const employee = new Employee(1, 'John Doe', null);
+      expect(employee).toEqual({
+        id: 1,
+        name: 'John Doe',
+        managerId: [null],
+        subordinate: [],
+      });
+    });
   });
 
-  test('findEmployeeById should find an employee by ID', () => {
-    const employee = new Employee(1, 'John', null);
-    employeeHierarchy.addEmployee(employee);
-    const foundEmployee = employeeHierarchy.findEmployeeById(1);
-    expect(foundEmployee).toBe(employee);
+  // Test cases for fillEmployeeFromFiles class
+  describe('fillEmployeeFromFiles class', () => {
+    test('Add employee to employees array', () => {
+      const employee = new Employee(1, 'John Doe', null);
+      fillEmployee.addEmployee(employee);
+      expect(fillEmployee.employees).toContainEqual(employee);
+    });
+
+    test('Fill employee object from data', () => {
+      const employeedata = [
+        { id: 1, name: 'John Doe', managerId: null },
+        { id: 2, name: 'Jane Doe', managerId: 1 },
+      ];
+      fillEmployee.fillEmployeeObject(employeedata);
+      expect(fillEmployee.employees).toHaveLength(2);
+    });
   });
 
-  // Continue with tests for other functions in EmployeeHierarchy class
-
-  test('buildEmployeeHierarchyFromFile should build hierarchy from file', () => {
-    const filename = 'testFile.json';
-    const sampleEmployeeData = [
-      { id: 1, name: 'John', managerId: null },
-      { id: 2, name: 'Jane', managerId: 1 },
-    ];
-
-    fs.readFileSync.mockReturnValue(JSON.stringify(sampleEmployeeData));
-
-    employeeHierarchy.buildEmployeeHierarchyFromFile(filename);
-
-    expect(employeeHierarchy.employees.length).toBe(2);
-    expect(employeeHierarchy.trees.length).toBe(1);
+  // Test cases for buildEmployeeTree class
+  describe('buildEmployeeTree class', () => {
+    test('Build employee tree', () => {
+      const employee1 = new Employee(1, 'John Doe', null);
+      const employee2 = new Employee(2, 'Jane Doe', 1);
+      fillEmployee.addEmployee(employee1);
+      fillEmployee.addEmployee(employee2);
+      buildEmployee.buildRootTreeforTreeStructure(fillEmployee.employees);
+      expect(buildEmployee.trees).toContainEqual(employee1);
+    });
   });
 
-  test('searchEmployeeByName should find an employee by name', () => {
-    const sampleEmployeeData = [
-      { id: 1, name: 'John', managerId: null },
-      { id: 2, name: 'Jane', managerId: 1 },
-    ];
-
-    employeeHierarchy.buildEmployeeHierarchy(sampleEmployeeData);
-
-    const result = employeeHierarchy.searchEmployeeByName('Jane');
-    expect(result.name).toBe('Jane');
+  // Test cases for findEmployee class
+  describe('findEmployee class', () => {
+    test('Search employee by name', () => {
+      const employee1 = new Employee(1, 'John Doe', null);
+      const employee2 = new Employee(2, 'Jane Doe', 1);
+      fillEmployee.addEmployee(employee1);
+      fillEmployee.addEmployee(employee2);
+      buildEmployee.buildRootTreeforTreeStructure(fillEmployee.employees);
+      const spy = jest.spyOn(console, 'log');
+      findEmployeeInstance.searchEmployeeByName('Jane Doe', buildEmployee.trees);
+      expect(spy).toHaveBeenCalledWith('Total count for direct and indirect reports: 2');
+      spy.mockRestore();
+    });
   });
-
-test('processSubordinate should add subordinate and manager relationships', () => {
-    const manager = new Employee(1, 'John', null);
-    const subordinate = new Employee(2, 'Jane', 1);
-
-    employeeHierarchy.addEmployee(manager);
-    employeeHierarchy.processSubordinate(subordinate);
-
-    expect(manager.subordinate.length).toBe(1);
-    expect(manager.subordinate[0]).toBe(subordinate);
-    expect(subordinate.mymanagers.length).toBe(1);
-    expect(subordinate.mymanagers[0]).toBe(manager);
-  });
-
-test('printCorrectPath should print the correct path', () => {
-  const employeeData = [
-    { id: 1, name: 'John', managerId: null },
-    { id: 2, name: 'Jane', managerId: 1 },
-  ];
-
-  employeeHierarchy.buildEmployeeHierarchy(employeeData);
-  const result = employeeHierarchy.searchEmployeeByName('Jane');
-
-  const consoleSpy = jest.spyOn(console, 'log');
-   const path = employeeHierarchy.printCorrectPath();
-
-
-  expect(consoleSpy).not.toHaveBeenCalled();
-  expect(path).toEqual(["Manager Path:", 'John', 'Jane']);
 });
-
-
-  test('printEmployeeHierarchyInfo should print the correct info', () => {
-    const employeeData = [
-      { id: 1, name: 'John', managerId: null },
-      { id: 2, name: 'Jane', managerId: 1 },
-    ];
-
-    employeeHierarchy.buildEmployeeHierarchy(employeeData);
-    const result = employeeHierarchy.searchEmployeeByName('Jane');
-
-    const consoleSpy = jest.spyOn(console, 'log');
-    const info = employeeHierarchy.printEmployeeHierarchyInfo(result);
-
-    expect(consoleSpy).not.toHaveBeenCalled();
-  expect(info).toEqual(['Total count for direct and indirect reports: 2']);
- });
-
-
-});
-
 
