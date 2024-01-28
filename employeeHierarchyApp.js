@@ -1,7 +1,8 @@
 
 // Concept from this whole program is to create tree structure from employee object. Program will ask input from user consist of JSON object. JSON object will be parse to javascript object and convert become employee object. 
 // And those employee object will be assigned to nodes of m-way tree structure to make  employee tree. Tree can be more than one tree structure and still be able to search any leaf on every tree structure. 
-// DFS(Deep First Search) algorith will be use to search on each tree and print result to user. Function logic inside class will begin from below to top following how function called within class. 
+// DFS(Deep First Search) algorith will be use to search on each tree and print result to user. Function logic inside class will begin from below to top following how function called within class. Bussiness logic on class
+// will be called from top to down following how bussiness logic works. Independent function can begin from top to down too as quite safe to called without dependencies.  
 
 
 // Employee object will take data from files and make every object as Employee object
@@ -236,11 +237,11 @@ const askUserToSearch = (cliInstanceForUser) => {
 // runProgram function first run this program and keep continue to ask user if not type exit 
 const runProgram = async () => {
   const cliforuser = preparingCliForUser(); //calling preparingCliForUser function to preparing user typing and displaying result to user on cli monitor    
-   await askFileName(cliforuser);
+   await askFileName(cliforuser);  // await this async function return value from user input filename
 
   let continuesearch = true; 
   while (continuesearch) {  // while will keep askusertosearch function running again after displaying all manager path to user, and ask user again for input
-    await askUserToSearch(cliforuser);
+    await askUserToSearch(cliforuser); // await this async function return value from user input employee name want to search
 }
 
 cliforuser.close(); // closing cli instance if program exit
