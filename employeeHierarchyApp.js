@@ -61,8 +61,9 @@ class buildEmployeeTree {
   }
 
 
-// This recursiveTreeTraversal function called to create node below root node, and every time one level will be created whole first, before moving to another level below it, so if first level having 3 nodes, then 3 nodes will be
-// create first before moving into most left leaf node to add another level. This will be proceed recursively, at one level with one top node, add whole node as subordinate.
+// This recursiveTreeTraversal function called to create node below root node, and every time one level will be created whole first, before moving to another level below it,
+//  so if first level having 3 nodes, then 3 nodes will be create first before moving into most left leaf node to add another level. 
+// This will be proceed recursively, at one level with one top node, add whole node as subordinate.
 
  recursiveBuildTreeNode(node, employeearraydata) {
     const onelevelnode =  employeearraydata.filter(employees => employees.managerId[0] === node.id);   // Filtering all next level node from current active node
@@ -77,8 +78,9 @@ class buildEmployeeTree {
       }
     }
 
-// This buildFirstNodeEmployeeTreeFromEachRoot function called from buildRootTreeforTreeStructure function to create another node below root tree 
-buildFirstNodeEmployeeTreeFromEachRoot(employeearray) {
+// This pickEachTreeAsRootFromTrees function called from buildRootTreeforTreeStructure function to create another node below root tree. 
+// Each tree is pick once at one iteration from trees array to be process by recursiveBuildTreeNode to create next level node.   
+pickEachTreeAsRootFromTrees(employeearray) {
     for (const root of this.trees) {                        // Picking each root from trees array to be processed along with employeearray object
       this.recursiveBuildTreeNode(root, employeearray);
     }
@@ -91,7 +93,7 @@ buildRootTreeforTreeStructure(employees) {
         this.trees.push(employee);   // add employee object with managerId null to trees array
       }
      }
-   this.buildFirstNodeEmployeeTreeFromEachRoot(employees);
+   this.pickEachTreeAsRootFromTrees(employees);
 }
 
 
